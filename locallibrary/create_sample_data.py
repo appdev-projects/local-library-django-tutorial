@@ -10,7 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
 django.setup()
 
 # Import models
-from catalog.models import Genre, Book, BookInstance, Author
+from catalog.models import Genre, Book, BookInstance, Author, Language
 
 # Initialize Faker instance
 fake = Faker()
@@ -36,8 +36,13 @@ def create_author(n):
         )
         print(f"{'Created' if created else 'Exists'}: Author - {author}")
 
-# Function to create books
+# Function to create books (and language)
 def create_book(n):
+    # Add languages
+    languages = ["English", "Spanish", "German", "Farsi"]
+    for language in languages:
+        Language.objects.get_or_create(name=language)
+
     for _ in range(n):
         title = fake.sentence(nb_words=4).rstrip('.')
         author = random.choice(Author.objects.all())
@@ -52,6 +57,10 @@ def create_book(n):
         # Add genres to book
         genres = random.sample(list(Genre.objects.all()), k=random.randint(1, 3))
         book.genre.set(genres)
+
+        # Add language to book
+        book.language = random.choice(Language.objects.all())
+        book.save()
 
         print(f"{'Created' if created else 'Exists'}: Book - {book.title}")
 
@@ -71,6 +80,7 @@ def create_book_instance(n):
         print(f"Created: BookInstance - {book_instance}")
 
 # Reset database
+Language.objects.all().delete()
 BookInstance.objects.all().delete()
 Genre.objects.all().delete()
 Book.objects.all().delete()
