@@ -37,6 +37,7 @@ class BookListView(generic.ListView):
     """Class Based View for books"""
     model = Book
     context_object_name = "books"
+    paginate_by = 10
 
     # def get_queryset(self):
     #     return Book.objects.filter(author=Author.objects.get(last_name="Kim"))
