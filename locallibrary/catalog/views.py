@@ -38,5 +38,10 @@ class BookListView(generic.ListView):
     model = Book
     context_object_name = "books"
 
-    def get_queryset(self):
-        return Book.objects.filter(author=Author.objects.get(last_name="Kim"))
+    # def get_queryset(self):
+    #     return Book.objects.filter(author=Author.objects.get(last_name="Kim"))
+
+    def get_context_data(self, **kwargs):
+        context = super(BookListView, self).get_context_data(**kwargs)
+        context["num_books"] = Book.objects.count()
+        return context
