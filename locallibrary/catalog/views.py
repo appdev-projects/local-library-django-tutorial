@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Book, Author, BookInstance, Genre
+from .forms import BookForm
 
 @login_required
 def index(request):
@@ -52,6 +53,19 @@ class BookListView(LoginRequiredMixin, generic.ListView):
 
 class BookDetailView(LoginRequiredMixin, generic.DetailView):
     model = Book
+
+def book_create(request):
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("books")
+    else:
+        form = BookForm()
+    
+    context = {"form": form}
+
+    return render(request, "catalog/book_form.html", context=context)
 
 class AuthorListView(LoginRequiredMixin, generic.ListView):
     model = Author
