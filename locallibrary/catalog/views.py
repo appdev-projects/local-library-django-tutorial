@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Book, Author, BookInstance, Genre
 
 @login_required
@@ -35,7 +36,7 @@ def index(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
-class BookListView(generic.ListView):
+class BookListView(LoginRequiredMixin, generic.ListView):
     """Class Based View for books"""
     model = Book
     context_object_name = "books"
@@ -49,13 +50,13 @@ class BookListView(generic.ListView):
         context["num_books"] = Book.objects.count()
         return context
 
-class BookDetailView(generic.DetailView):
+class BookDetailView(LoginRequiredMixin, generic.DetailView):
     model = Book
 
-class AuthorListView(generic.ListView):
+class AuthorListView(LoginRequiredMixin, generic.ListView):
     model = Author
     context_object_name = "authors"
     paginate_by = 5
 
-class AuthorDetailView(generic.DetailView):
+class AuthorDetailView(LoginRequiredMixin, generic.DetailView):
     model = Author
