@@ -81,6 +81,11 @@ def book_update(request, pk):
 
     return render(request, "catalog/book_form.html", context=context)
 
+def book_delete(request, pk):
+    book = Book.objects.get(pk=pk)
+    book.delete()
+    return redirect("books")
+
 class AuthorListView(LoginRequiredMixin, generic.ListView):
     model = Author
     context_object_name = "authors"
