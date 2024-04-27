@@ -45,3 +45,8 @@ class BookListView(generic.ListView):
         context = super(BookListView, self).get_context_data(**kwargs)
         context["num_books"] = Book.objects.count()
         return context
+
+def book_detail(request, pk):
+    book = Book.objects.get(pk=pk)
+    context = {"book": book}
+    return render(request, "catalog/book_detail.html", context=context)
