@@ -34,4 +34,6 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 class BookListView(generic.ListView):
+    """Class Based View for books"""
     model = Book
+    context_object_name = "books"
